@@ -74,7 +74,7 @@ function detectProcesses() {
 }
 
 // Start Monitoring
-console.log("🔥 OP Anti-Cheat Monitoring Started...");
+console.log(" Monitoring Started...");
 
 // Monitor every 5 seconds
 setInterval(() => {

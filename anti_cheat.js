@@ -1,8 +1,9 @@
-const { exec } = require("child_process");
-const notifier = require("node-notifier");
-const fs = require("fs");
-const path = require("path");
-const os = require("os");
+import { exec } from "child_process";
+import notifier from "node-notifier";
+import fs from "fs";
+import path from "path";
+import os from "os";
+
 
 const SUSPICIOUS = {
   PROCESS_NAMES: ["interviewcoder", "cheat", "anydesk", "teamviewer", "remote"],
@@ -99,7 +100,7 @@ function detectFiles() {
 }
 
 // Start Monitoring
-console.log("🔥 OP Anti-Cheat Monitoring Started...");
+console.log("Monitoring Started...");
 
 setInterval(() => {
   detectProcesses();
