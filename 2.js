@@ -28,11 +28,10 @@ async function checkProcessesAndConnections() {
     const processes = await psList();
     const allConnections = [];
 
-    // Capture active network connections
-    netstat(
+    +netstat(
       {
         filter: {
-          state: "ESTABLISHED", // Only established connections
+          state: "ESTABLISHED",
         },
         sync: true,
       },
@@ -43,10 +42,9 @@ async function checkProcessesAndConnections() {
 
     setTimeout(() => {
       allConnections.forEach((conn) => {
-        // Try finding the corresponding process
         const proc = processes.find((p) => p.pid === conn.pid);
 
-        if (!proc) return; // Process not found, skip
+        if (!proc) return;
 
         const procName = (proc.name || "").toLowerCase();
 
@@ -58,7 +56,6 @@ async function checkProcessesAndConnections() {
           triggerAlert(`Suspicious process detected: ${proc.name}`);
         }
 
-        // Now check for suspicious domains (reverse DNS lookup)
         dns.reverse(conn.remote.address, (err, hostnames) => {
           if (err) {
             console.log("err DNS");
@@ -77,14 +74,12 @@ async function checkProcessesAndConnections() {
           }
         });
       });
-    }, 1000); // wait for netstat to populate connections
+    }, 1000);
   } catch (error) {
     console.error("Error checking processes and connections:", error);
   }
 }
 
-// Run the checking every 10 seconds
 setInterval(checkProcessesAndConnections, 10000);
 
-// Run once at start
 checkProcessesAndConnections();

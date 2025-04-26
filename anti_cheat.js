@@ -4,15 +4,14 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 
-
 const SUSPICIOUS = {
   PROCESS_NAMES: ["interviewcoder", "cheat", "anydesk", "teamviewer", "remote"],
   WINDOW_TITLES: ["interview coder", "cheat sheet", "hidden window"],
   FILE_NAMES: ["interviewcoder.exe", "cheatengine.exe"],
-  KEYWORDS: ["stack overflow", "leetcode", "gfg ide", "codeforces"], //
+  KEYWORDS: ["stack overflow", "leetcode", "gfg ide", "codeforces"],
 };
 
-const CHECK_INTERVAL = 5000; // 5 seconds
+const CHECK_INTERVAL = 5000;
 
 function triggerAlert(message) {
   notifier.notify({
@@ -24,7 +23,6 @@ function triggerAlert(message) {
   console.log(`[ALERT] ${new Date().toLocaleString()}: ${message}`);
 }
 
-// Process and Commandline Check
 function detectProcesses() {
   exec(
     "wmic process get Name,CommandLine",
@@ -34,7 +32,7 @@ function detectProcesses() {
         console.error("Process fetch error:", error || stderr);
         return;
       }
-      const lines = stdout.split("\n").slice(1); // Skip header
+      const lines = stdout.split("\n").slice(1);
       lines.forEach((line) => {
         const lowerLine = line.toLowerCase();
         SUSPICIOUS.PROCESS_NAMES.forEach((badName) => {
@@ -47,7 +45,6 @@ function detectProcesses() {
   );
 }
 
-// Window Title Check
 function detectWindows() {
   exec(
     `powershell "gps | where { $_.MainWindowTitle } | select MainWindowTitle"`,
@@ -65,7 +62,6 @@ function detectWindows() {
       titles.forEach((title) => {
         const lowerTitle = title.toLowerCase();
 
-        // Window Title Specific Check
         SUSPICIOUS.WINDOW_TITLES.forEach((badTitle) => {
           if (lowerTitle.includes(badTitle)) {
             triggerAlert(`Suspicious window detected: ${title}`);
@@ -81,7 +77,6 @@ function detectWindows() {
   );
 }
 
-// Suspicious Files in Temp Folders
 function detectFiles() {
   const tempPaths = [
     os.tmpdir(),
@@ -99,7 +94,6 @@ function detectFiles() {
   });
 }
 
-// Start Monitoring
 console.log("Monitoring Started...");
 
 setInterval(() => {

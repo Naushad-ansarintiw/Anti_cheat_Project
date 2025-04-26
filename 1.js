@@ -5,7 +5,6 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 
-// List of AI services and suspicious IPs
 const SUSPICIOUS_AI_DOMAINS = [
   "api.openai.com",
   "api.anthropic.com",
@@ -14,13 +13,12 @@ const SUSPICIOUS_AI_DOMAINS = [
 ];
 
 const SUSPICIOUS_IPS = [
-  "172.66.0.243", // Cloudflare IP (OpenAI)
-  "160.79.104.10", // Cloudflare IP (Anthropic)
-  "104.18.27.90", // Cloudflare IP (Deepseek)
-  "104.198.79.154", // Cloudflare IP (Llama)
+  "172.66.0.243",
+  "160.79.104.10",
+  "104.18.27.90",
+  "104.198.79.154",
 ];
 
-// Alert Function
 function triggerAlert(message) {
   notifier.notify({
     title: "Cheating Detected!",
@@ -31,7 +29,6 @@ function triggerAlert(message) {
   console.log(`[ALERT] ${new Date().toLocaleString()}: ${message}`);
 }
 
-// DNS Lookup for AI domains
 function checkDNSForAI() {
   SUSPICIOUS_AI_DOMAINS.forEach((domain) => {
     dns.lookup(domain, (err, address) => {
@@ -50,7 +47,6 @@ function checkDNSForAI() {
   });
 }
 
-// Monitor suspicious processes (including API calls from known AI providers)
 function detectProcesses() {
   exec(
     "wmic process get Name,CommandLine",
@@ -73,10 +69,8 @@ function detectProcesses() {
   );
 }
 
-// Start Monitoring
 console.log(" Monitoring Started...");
 
-// Monitor every 5 seconds
 setInterval(() => {
-  checkDNSForAI(); // DNS check for AI domains
+  checkDNSForAI();
 }, 5000);
